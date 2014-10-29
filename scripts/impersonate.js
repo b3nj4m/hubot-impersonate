@@ -87,7 +87,7 @@ function start(robot) {
   robot.respond(/stop impersonating/i, function(msg) {
     if (shouldRespond()) {
       if (impersonating) {
-        var user = robot.brain.userFromId(impersonating);
+        var user = robot.brain.userForId(impersonating);
         impersonating = false;
         msg.send('stopped impersonating ' + user.name);
       }
@@ -102,7 +102,7 @@ function start(robot) {
 
     if (!hubotMessageRegex.test(text)) {
       if (shouldTrain()) {
-        var userId = msg.user.id;
+        var userId = msg.message.user.id;
         var data = retrieve('impersonateMarkov-' + userId) || {};
 
         markov.import(data);
