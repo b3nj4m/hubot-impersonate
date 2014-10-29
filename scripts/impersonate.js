@@ -20,12 +20,12 @@ var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_res
 
 var impersonating = false;
 
-function shouldTrain() {
-  return _.contains(['train', 'train_respond'], MODE);
-}
+var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
+
+var shouldRespondMode = _.constant(_.contains(['respond', 'train_respond'], MODE));
 
 function shouldRespond() {
-  return _.contains(['respond', 'train_respond'], MODE) && impersonating;
+  return shouldRespondMode() && impersonating;
 }
 
 function robotStore(robot, key, data) {
@@ -45,7 +45,7 @@ function start(robot) {
   var hubotMessageRegex = new RegExp('^[@]?(' + robot.name + ')' + (robot.alias ? '|(' + robot.alias + ')' : '') + '[:,]?\\s', 'i');
 
   robot.respond(/impersonate (\w*)/i, function(msg) {
-    if (shouldRespond()) {
+    if (shouldRespondMode()) {
       var username = msg.match[1];
       var text = msg.message.text;
 
@@ -64,14 +64,18 @@ function start(robot) {
 
   robot.respond(/stop impersonating/i, function(msg) {
     if (shouldRespond()) {
-      if (impersonating) {
-        var user = robot.brain.userForId(impersonating);
-        impersonating = false;
+      var user = robot.brain.userForId(impersonating);
+      impersonating = false;
+
+      if (user) {
         msg.send('stopped impersonating ' + user.name);
       }
       else {
-        msg.send('Wat.');
+        msg.send('stopped');
       }
+    }
+    else {
+      msg.send('Wat.');
     }
   });
 
