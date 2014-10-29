@@ -13,6 +13,7 @@
 //  b3nj4m
 
 var Markov = require('markov-respond');
+var _ = require('underscore');
 
 var ORDER = process.env.HUBOT_IMPERSONATE_MARKOV_ORDER ? parseInt(process.env.HUBOT_IMPERSONATE_MARKOV_ORDER) : 3;
 var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_respond', 'respond'], process.env.HUBOT_IMPERSONATE_MODE) ? process.env.HUBOT_IMPERSONATE_MODE : 'train';
