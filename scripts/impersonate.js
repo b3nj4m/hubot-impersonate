@@ -103,7 +103,7 @@ function start(robot) {
     if (!hubotMessageRegex.test(text)) {
       if (shouldTrain()) {
         var userId = msg.message.user.id;
-        var data = retrieve('impersonateMarkov-' + userId) || {};
+        var data = retrieve('impersonateMarkov-' + userId) || '{}';
 
         markov.import(data);
         markov.train(text);
@@ -111,7 +111,7 @@ function start(robot) {
       }
 
       if (shouldRespond()) {
-        data = retrieve('impersonateMarkov-' + impersonating) || {};
+        data = retrieve('impersonateMarkov-' + impersonating) || '{}';
         markov.import(data);
         msg.send(markov.respond(text));
       }
