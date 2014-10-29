@@ -17,5 +17,8 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/b3nj4m/hubot-impersonate/issues"
+  },
+  "dependencies": {
+    "markov-respond": "~2.0.1"
   }
 }
