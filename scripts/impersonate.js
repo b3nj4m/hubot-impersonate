@@ -28,34 +28,12 @@ function shouldRespond() {
   return _.contains(['respond', 'train_respond'], MODE) && impersonating;
 }
 
-function serialize(data) {
-  try {
-    string = JSON.stringify(data);
-  }
-  catch (err) {
-    //emit error?
-  }
-
-  return string;
-}
-
-function deserialize(string) {
-  try {
-    data = JSON.parse(string);
-  }
-  catch (err) {
-    //emit error?
-  }
-
-  return data;
-}
-
 function robotStore(robot, key, data) {
-  return robot.brain.set(key, serialize(data));
+  return robot.brain.set(key, data);
 }
 
 function robotRetrieve(robot, key) {
-  return deserialize(robot.brain.get(key));
+  return robot.brain.get(key);
 }
 
 function start(robot) {
