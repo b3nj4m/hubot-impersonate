@@ -78,7 +78,7 @@ function start(robot) {
         msg.send('impersonating ' + user.name);
       }
       else {
-        msg.send("I don't know any " username + ".");
+        msg.send("I don't know any " + username + ".");
       }
     }
   });
