@@ -20,9 +20,9 @@ Set the mode of operation (default 'train'). Can be one of 'train', 'respond', '
 HUBOT_IMPERSONATE_MODE=mode
 ```
 
-#### Markov order
+#### Minimum number of words
 
-Set the order of the Markov chain (default 3).
+Ignore messages with fewer than `N` words.
 
 ```
 HUBOT_IMPERSONATE_MARKOV_ORDER=N

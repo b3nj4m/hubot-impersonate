@@ -1,9 +1,9 @@
 //Description:
-//  balls
+//  Impersonate a user using Markov chains
 //
 //Configuration:
 //  HUBOT_IMPERSONATE_MODE=mode - one of 'train', 'train_respond', 'respond'. (default 'train')
-//  HUBOT_IMPERSONATE_MARKOV_ORDER=order - the order of the markov chain. (default 3)
+//  HUBOT_IMPERSONATE_MARKOV_MIN_WORDS=N - ignore messages with fewer than N words. (default 1)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
@@ -15,7 +15,7 @@
 var Markov = require('markov-respond');
 var _ = require('underscore');
 
-var ORDER = process.env.HUBOT_IMPERSONATE_MARKOV_ORDER ? parseInt(process.env.HUBOT_IMPERSONATE_MARKOV_ORDER) : 3;
+var MIN_WORDS = process.env.HUBOT_IMPERSONATE_MARKOV_MIN_WORDS ? parseInt(process.env.HUBOT_IMPERSONATE_MARKOV_MIN_WORDS) : 1;
 var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_respond', 'respond'], process.env.HUBOT_IMPERSONATE_MODE) ? process.env.HUBOT_IMPERSONATE_MODE : 'train';
 
 var impersonating = false;
@@ -40,7 +40,7 @@ function start(robot) {
   var store = robotStore.bind(this, robot);
   var retrieve = robotRetrieve.bind(this, robot);
 
-  var markov = new Markov(ORDER);
+  var markov = new Markov(MIN_WORDS);
 
   var hubotMessageRegex = new RegExp('^[@]?(' + robot.name + ')' + (robot.alias ? '|(' + robot.alias + ')' : '') + '[:,]?\\s', 'i');
 
@@ -86,6 +86,7 @@ function start(robot) {
       if (shouldTrain()) {
         var userId = msg.message.user.id;
         var data = retrieve('impersonateMarkov-' + userId) || '{}';
+        //TODO keep data in memory unserialized
 
         markov.import(data);
         markov.train(text);
