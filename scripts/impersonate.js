@@ -50,6 +50,8 @@ function start(robot) {
   var store = robotStore.bind(this, robot);
   var retrieve = robotRetrieve.bind(this, robot, cache);
 
+  robot.brain.setAutoSave(true);
+
   var hubotMessageRegex = new RegExp('^[@]?(' + robot.name + ')' + (robot.alias ? '|(' + robot.alias + ')' : '') + '[:,]?\\s', 'i');
 
   robot.respond(/impersonate (\w*)/i, function(msg) {
