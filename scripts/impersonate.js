@@ -4,6 +4,7 @@
 //Configuration:
 //  HUBOT_IMPERSONATE_MODE=mode - one of 'train', 'train_respond', 'respond'. (default 'train')
 //  HUBOT_IMPERSONATE_MARKOV_MIN_WORDS=N - ignore messages with fewer than N words. (default 1)
+//  HUBOT_IMPERSONATE_INIT_TIMEOUT=N - wait for N milliseconds for brain data to load from redis. (default 10000)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
@@ -17,6 +18,7 @@ var _ = require('underscore');
 
 var MIN_WORDS = process.env.HUBOT_IMPERSONATE_MARKOV_MIN_WORDS ? parseInt(process.env.HUBOT_IMPERSONATE_MARKOV_MIN_WORDS) : 1;
 var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_respond', 'respond'], process.env.HUBOT_IMPERSONATE_MODE) ? process.env.HUBOT_IMPERSONATE_MODE : 'train';
+var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 10000;
 
 var impersonating = false;
 
@@ -86,7 +88,6 @@ function start(robot) {
       if (shouldTrain()) {
         var userId = msg.message.user.id;
         var data = retrieve('impersonateMarkov-' + userId) || '{}';
-        //TODO keep data in memory unserialized
 
         markov.import(data);
         markov.train(text);
@@ -103,12 +104,14 @@ function start(robot) {
 }
 
 module.exports = function(robot) {
-  var loaded = function() {
+  var loaded = _.once(function() {
+    console.log('starting hubot-impersonate...');
     start(robot);
-  };
+  });
 
   if (_.isEmpty(robot.brain.data) || _.isEmpty(robot.brain.data._private)) {
     robot.brain.once('loaded', loaded);
+    setTimeout(loaded, INIT_TIMEOUT);
   }
   else {
     loaded();

@@ -22,10 +22,18 @@ HUBOT_IMPERSONATE_MODE=mode
 
 #### Minimum number of words
 
-Ignore messages with fewer than `N` words.
+Ignore messages with fewer than `N` words (default 1).
 
 ```
 HUBOT_IMPERSONATE_MARKOV_ORDER=N
+```
+
+#### Initialization timeout
+
+Wait for N milliseconds for hubot to initialize and load brain data from redis. (default 10000)
+
+```
+HUBOT_IMPERSONATE_INIT_TIMEOUT=N
 ```
 
 ### Commands
