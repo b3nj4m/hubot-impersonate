@@ -30,19 +30,25 @@ function shouldRespond() {
   return shouldRespondMode() && impersonating;
 }
 
-function robotStore(robot, key, data) {
-  return robot.brain.set(key, data);
+function robotStore(robot, userId, data) {
+  return robot.brain.set('impersonateMarkov-' + userId, data.export());
 }
 
-function robotRetrieve(robot, key) {
-  return robot.brain.get(key);
+function robotRetrieve(robot, cache, userId) {
+  if (cache[userId]) {
+    return cache[userId];
+  }
+
+  var m = new Markov(MIN_WORDS);
+  m.import(robot.brain.get('impersonateMarkov-' + userId) || '{}');
+  cache[userId] = m;
+  return m;
 }
 
 function start(robot) {
+  var cache = {};
   var store = robotStore.bind(this, robot);
-  var retrieve = robotRetrieve.bind(this, robot);
-
-  var markov = new Markov(MIN_WORDS);
+  var retrieve = robotRetrieve.bind(this, robot, cache);
 
   var hubotMessageRegex = new RegExp('^[@]?(' + robot.name + ')' + (robot.alias ? '|(' + robot.alias + ')' : '') + '[:,]?\\s', 'i');
 
@@ -83,20 +89,19 @@ function start(robot) {
 
   robot.hear(/.*/, function(msg) {
     var text = msg.message.text;
+    var markov;
 
     if (!hubotMessageRegex.test(text)) {
       if (shouldTrain()) {
         var userId = msg.message.user.id;
-        var data = retrieve('impersonateMarkov-' + userId) || '{}';
+        markov = retrieve(userId);
 
-        markov.import(data);
         markov.train(text);
-        store('impersonateMarkov-' + userId, markov.export());
+        store(userId, markov);
       }
 
       if (shouldRespond()) {
-        data = retrieve('impersonateMarkov-' + impersonating) || '{}';
-        markov.import(data);
+        markov = retrieve(impersonating);
         msg.send(markov.respond(text));
       }
     }
