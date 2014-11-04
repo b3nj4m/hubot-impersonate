@@ -36,6 +36,22 @@ Wait for N milliseconds for hubot to initialize and load brain data from redis. 
 HUBOT_IMPERSONATE_INIT_TIMEOUT=N
 ```
 
+#### Case sensitivity
+
+Whether to keep the original case of words. (default false)
+
+```
+HUBOT_IMPERSONATE_CASE_SENSITIVE=true|false
+```
+
+#### Strip punctuation
+
+Whether to strip punctuation/symbols from messages. (default false)
+
+```
+HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false
+```
+
 ### Commands
 
 #### Impersonate

@@ -5,6 +5,8 @@
 //  HUBOT_IMPERSONATE_MODE=mode - one of 'train', 'train_respond', 'respond'. (default 'train')
 //  HUBOT_IMPERSONATE_MARKOV_MIN_WORDS=N - ignore messages with fewer than N words. (default 1)
 //  HUBOT_IMPERSONATE_INIT_TIMEOUT=N - wait for N milliseconds for brain data to load from redis. (default 10000)
+//  HUBOT_IMPERSONATE_CASE_SENSITIVE=true|false - whether to keep the original case of words (default false)
+//  HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false - whether to strip punctuation/symbols from messages (default false)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
@@ -19,6 +21,8 @@ var _ = require('underscore');
 var MIN_WORDS = process.env.HUBOT_IMPERSONATE_MARKOV_MIN_WORDS ? parseInt(process.env.HUBOT_IMPERSONATE_MARKOV_MIN_WORDS) : 1;
 var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_respond', 'respond'], process.env.HUBOT_IMPERSONATE_MODE) ? process.env.HUBOT_IMPERSONATE_MODE : 'train';
 var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 10000;
+var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
+var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
 
 var impersonating = false;
 
@@ -39,7 +43,7 @@ function robotRetrieve(robot, cache, userId) {
     return cache[userId];
   }
 
-  var m = new Markov(MIN_WORDS);
+  var m = new Markov(MIN_WORDS, CASE_SENSITIVE, STRIP_PUNCTUATION);
   m.import(robot.brain.get('impersonateMarkov-' + userId) || '{}');
   cache[userId] = m;
   return m;
