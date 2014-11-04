@@ -1,6 +1,6 @@
 {
   "name": "hubot-impersonate",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Enable Hubot to learn from chat history and impersonate users.",
   "main": "index.js",
   "scripts": {
