@@ -19,7 +19,7 @@
     "url": "https://github.com/b3nj4m/hubot-impersonate/issues"
   },
   "dependencies": {
-    "markov-respond": "~5.0.0",
+    "markov-respond": "~5.2.0",
     "underscore": "~1.7.0"
   }
 }
