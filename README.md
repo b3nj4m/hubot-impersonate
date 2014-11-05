@@ -25,7 +25,7 @@ HUBOT_IMPERSONATE_MODE=mode
 Ignore messages with fewer than `N` words (default 1).
 
 ```
-HUBOT_IMPERSONATE_MARKOV_ORDER=N
+HUBOT_IMPERSONATE_MIN_WORDS=N
 ```
 
 #### Initialization timeout
