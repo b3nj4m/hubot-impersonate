@@ -3,7 +3,12 @@
 Enable Hubot to learn from chat history and impersonate users.
 
 ```
-//TODO example
+Bob: pizza is super good
+Alice: hubot impersonate bob
+Hubot: impersonating Bob
+Eve: I love pizza
+Hubot: pizza is super
+...
 ```
 
 ### Model
