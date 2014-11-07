@@ -24,15 +24,9 @@ var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
 
-var impersonating = false;
-
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
 var shouldRespondMode = _.constant(_.contains(['respond', 'train_respond'], MODE));
-
-function shouldRespond() {
-  return shouldRespondMode() && impersonating;
-}
 
 function robotStore(robot, userId, data) {
   return robot.brain.set('impersonateMarkov-' + userId, data.export());
@@ -50,6 +44,13 @@ function robotRetrieve(robot, cache, userId) {
 }
 
 function start(robot) {
+  var impersonating = false;
+  var lastMessageText;
+
+  function shouldRespond() {
+    return shouldRespondMode() && impersonating;
+  }
+
   var cache = {};
   var store = robotStore.bind(this, robot);
   var retrieve = robotRetrieve.bind(this, robot, cache);
@@ -69,6 +70,9 @@ function start(robot) {
         var user = users[0];
         impersonating = user.id;
         msg.send('impersonating ' + user.name);
+
+        var markov = retrieve(impersonating);
+        msg.send(markov.respond(lastMessageText || 'beans'));
       }
       else {
         msg.send("I don't know any " + username + ".");
@@ -97,7 +101,9 @@ function start(robot) {
     var text = msg.message.text;
     var markov;
 
-    if (!hubotMessageRegex.test(text)) {
+    if (text && !hubotMessageRegex.test(text)) {
+      lastMessageText = text;
+
       if (shouldTrain()) {
         var userId = msg.message.user.id;
         markov = retrieve(userId);
