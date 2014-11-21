@@ -22,7 +22,8 @@
     "hubot": "2.x"
   },
   "dependencies": {
-    "markov-respond": "~6.0.0",
-    "underscore": "~1.7.0"
+    "markov-respond": "~7.0.0",
+    "underscore": "~1.7.0",
+    "msgpack": "~0.2.4"
   }
 }

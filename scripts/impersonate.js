@@ -1,6 +1,11 @@
 //Description:
 //  Impersonate a user using Markov chains
 //
+//Dependencies:
+//  markov-respond: ~6.0.0
+//  underscore: ~1.7.0
+//  msgpack: ~0.2.4
+//
 //Configuration:
 //  HUBOT_IMPERSONATE_MODE=mode - one of 'train', 'train_respond', 'respond'. (default 'train')
 //  HUBOT_IMPERSONATE_MIN_WORDS=N - ignore messages with fewer than N words. (default 1)
@@ -17,6 +22,7 @@
 
 var Markov = require('markov-respond');
 var _ = require('underscore');
+var msgpack = require('msgpack');
 
 var MIN_WORDS = process.env.HUBOT_IMPERSONATE_MIN_WORDS ? parseInt(process.env.HUBOT_IMPERSONATE_MIN_WORDS) : 1;
 var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_respond', 'respond'], process.env.HUBOT_IMPERSONATE_MODE) ? process.env.HUBOT_IMPERSONATE_MODE : 'train';
@@ -29,7 +35,7 @@ var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 var shouldRespondMode = _.constant(_.contains(['respond', 'train_respond'], MODE));
 
 function robotStore(robot, userId, data) {
-  return robot.brain.set('impersonateMarkov-' + userId, data.export());
+  return robot.brain.set('impersonateMarkov-' + userId, msgpack.pack(data.export()));
 }
 
 function robotRetrieve(robot, cache, userId) {
@@ -37,9 +43,13 @@ function robotRetrieve(robot, cache, userId) {
     return cache[userId];
   }
 
+  var data = msgpack.unpack(new Buffer(robot.brain.get('impersonateMarkov-' + userId) || ''));
+  data = _.isObject(data) ? data : {};
+
   var m = new Markov(MIN_WORDS, CASE_SENSITIVE, STRIP_PUNCTUATION);
-  m.import(robot.brain.get('impersonateMarkov-' + userId) || '{}');
+  m.import(data);
   cache[userId] = m;
+
   return m;
 }
 
