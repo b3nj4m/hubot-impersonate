@@ -130,8 +130,8 @@ function start(robot) {
         markov = retrieve(impersonating);
         var markovResponse = markov.respond(text);
         var baseDelay = RESPONSE_DELAY_PER_WORD*markovResponse.split(" ").length;
-        var delay = Math.random() * (baseDelay*1.5 - baseDelay*0.75) + baseDelay*0.75;
-        setTimeout(msg.send(delay), delay);
+        var totalDelay = Math.random() * (baseDelay*1.5 - baseDelay*0.75) + baseDelay*0.75;
+        setTimeout(msg.send(markovResponse), 4000);
       }
     }
   });
