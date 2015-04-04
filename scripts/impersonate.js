@@ -38,11 +38,6 @@ var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
 var shouldRespondMode = _.constant(_.contains(['respond', 'train_respond'], MODE));
 
-function responseDelay(num) {
-  var baseDelay = RESPONSE_DELAY_PER_WORD*num;
-  return Math.random() * (baseDelay*1.50 - baseDelay*0.5) + baseDelay*0.5;
-}
-
 function robotStore(robot, userId, data) {
   return robot.brain.set('impersonateMarkov-' + userId, msgpack.pack(data.export()));
 }
@@ -133,7 +128,10 @@ function start(robot) {
 
       if (shouldRespond()) {
         markov = retrieve(impersonating);
-        setTimeout(msg.send(markov.respond(text)), responseDelay(text.length));
+        var markovResponse = markov.respond(text);
+        var baseDelay = RESPONSE_DELAY_PER_WORD*markovResponse.length;
+        var delay = Math.random() * (baseDelay*1.50 - baseDelay*0.5) + baseDelay*0.5
+        setTimeout(msg.send(markovResponse), delay);
       }
     }
   });
