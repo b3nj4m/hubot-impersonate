@@ -30,9 +30,18 @@ var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
 
+// TEST CONSTS
+var RESPONSE_DELAY_PER_WORD = 600;
+
+
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
 var shouldRespondMode = _.constant(_.contains(['respond', 'train_respond'], MODE));
+
+function responseDelay(num) {
+  var baseDelay = RESPONSE_DELAY_PER_WORD*num;
+  return Math.random() * (baseDelay*1.50 - baseDelay*0.5) + baseDelay*0.5;
+}
 
 function robotStore(robot, userId, data) {
   return robot.brain.set('impersonateMarkov-' + userId, msgpack.pack(data.export()));
@@ -124,7 +133,7 @@ function start(robot) {
 
       if (shouldRespond()) {
         markov = retrieve(impersonating);
-        msg.send(markov.respond(text));
+        setTimeout(msg.send(markov.respond(text)), responseDelay(text.length));
       }
     }
   });
