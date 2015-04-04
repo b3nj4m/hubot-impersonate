@@ -31,8 +31,7 @@ var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.e
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
 
 // TEST CONSTS
-var RESPONSE_DELAY_PER_WORD = 600;
-
+var RESPONSE_DELAY_PER_WORD = 600; // 600ms per word on average, inclusive of thought processes
 
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
@@ -127,11 +126,13 @@ function start(robot) {
       }
 
       if (shouldRespond()) {
-        markov = retrieve(impersonating);
-        var markovResponse = markov.respond(text);
-        var baseDelay = RESPONSE_DELAY_PER_WORD*markovResponse.split(" ").length;
-        var totalDelay = Math.random() * (baseDelay*1.5 - baseDelay*0.75) + baseDelay*0.75;
-        setTimeout(function() { msg.send(markovResponse) }, totalDelay);
+        if (Math.floor(Math.random()*(11-1))+1 > Math.floor(Math.random()*(11-1))+1) {
+          markov = retrieve(impersonating);
+          var markovResponse = markov.respond(text);
+          var baseDelay = RESPONSE_DELAY_PER_WORD*markovResponse.split(" ").length;
+          var totalDelay = Math.random() * (baseDelay*1.5 - baseDelay*0.75) + baseDelay*0.75;
+          setTimeout(function() { msg.send(markovResponse) }, totalDelay);
+        }
       }
     }
   });
