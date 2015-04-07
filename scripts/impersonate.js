@@ -80,8 +80,13 @@ function start(robot) {
 
       if (users && users.length > 0) {
         var user = users[0];
-        impersonating = user.id;
-        msg.send('impersonating ' + user.name);
+        // if (user.name != robot.name) {
+          impersonating = user.id;
+          msg.send('impersonating ' + user.name);
+        // }
+        // else {
+        //   msg.send('I cannot impersonate myself.');
+        // }
 
         // var markov = retrieve(impersonating);
         // msg.send(markov.respond(lastMessageText || 'beans'));
