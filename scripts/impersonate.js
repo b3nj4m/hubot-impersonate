@@ -82,7 +82,7 @@ function start(robot) {
                 var user = users[0];
                 if (user.name !== robot.name) {
                     impersonating = user.id;
-                    msg.send("I'm now impersonating " + user.name);
+                    msg.send("Alright. I'm now impersonating " + user.name);
                 } else {
                     msg.send("Can you impersonate yourself? I can't.");
                 }
