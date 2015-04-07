@@ -12,7 +12,6 @@
 //  HUBOT_IMPERSONATE_INIT_TIMEOUT=N - wait for N milliseconds for brain data to load from redis. (default 10000)
 //  HUBOT_IMPERSONATE_CASE_SENSITIVE=true|false - whether to keep the original case of words (default false)
 //  HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false - whether to strip punctuation/symbols from messages (default false)
-//  HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false - whether to strip punctuation/symbols from messages (default false)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
@@ -30,7 +29,9 @@ var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_res
 var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 10000;
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
-var RESPONSE_DELAY_PER_WORD =  process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 600;
+
+// TEST CONSTS
+var RESPONSE_DELAY_PER_WORD = 600; // 600ms per word on average, inclusive of thought processes
 
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
