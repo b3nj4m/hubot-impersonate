@@ -12,6 +12,7 @@
 //  HUBOT_IMPERSONATE_INIT_TIMEOUT=N - wait for N milliseconds for brain data to load from redis. (default 10000)
 //  HUBOT_IMPERSONATE_CASE_SENSITIVE=true|false - whether to keep the original case of words (default false)
 //  HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false - whether to strip punctuation/symbols from messages (default false)
+//  HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD=N - set average number of milliseconds per word typed (default 600)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
@@ -29,9 +30,7 @@ var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_res
 var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 10000;
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
-
-// TEST CONSTS
-var RESPONSE_DELAY_PER_WORD = 600; // 600ms per word on average, inclusive of thought processes
+var RESPONSE_DELAY_PER_WORD =  process.env.HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD ? parseInt(process.env.HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD) : 600;
 
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
@@ -81,11 +80,16 @@ function start(robot) {
 
       if (users && users.length > 0) {
         var user = users[0];
-        impersonating = user.id;
-        msg.send('impersonating ' + user.name);
+        if (user.name !== robot.name) {
+          impersonating = user.id;
+          msg.send('impersonating ' + user.name);
+        }
+        else {
+          msg.send('I cannot impersonate myself.');
+        }
 
-        var markov = retrieve(impersonating);
-        msg.send(markov.respond(lastMessageText || 'beans'));
+        // var markov = retrieve(impersonating);
+        // msg.send(markov.respond(lastMessageText || 'beans'));
       }
       else {
         msg.send("I don't know any " + username + ".");
@@ -125,12 +129,11 @@ function start(robot) {
         store(userId, markov);
       }
 
-      if (shouldRespond()) {
-        if (Math.floor(Math.random()*(11-1))+1 > Math.floor(Math.random()*(11-1))+1) {
+      if (shouldRespond() && (Math.floor(Math.random()*(21-1))+1 > Math.floor(Math.random()*(21-1))+1)) { // Don't reply all the time, but reply randomly.
           markov = retrieve(impersonating);
           var markovResponse = markov.respond(text);
           var baseDelay = RESPONSE_DELAY_PER_WORD*markovResponse.split(" ").length;
-          var totalDelay = Math.random() * (baseDelay*1.5 - baseDelay*0.75) + baseDelay*0.75;
+          var totalDelay = Math.random() * (baseDelay*1.5 - baseDelay*0.75) + baseDelay*0.75; // Sets variance of typing speed with RESPONSE_DELAY_PER_WORD as basis
           setTimeout(function() { msg.send(markovResponse) }, totalDelay);
         }
       }
