@@ -134,7 +134,7 @@ function start(robot) {
         }
       }
     }
-  });
+  }
 }
 
 module.exports = function(robot) {
