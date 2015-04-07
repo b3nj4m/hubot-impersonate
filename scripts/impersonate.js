@@ -12,6 +12,7 @@
 //  HUBOT_IMPERSONATE_INIT_TIMEOUT=N - wait for N milliseconds for brain data to load from redis. (default 10000)
 //  HUBOT_IMPERSONATE_CASE_SENSITIVE=true|false - whether to keep the original case of words (default false)
 //  HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false - whether to strip punctuation/symbols from messages (default false)
+//  HUBOT_IMPERSONATE_INIT_TIMEOUT=N - simulate time to type a word, as a baseline, in milliseconds. (default 600)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
