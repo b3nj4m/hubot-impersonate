@@ -57,6 +57,14 @@ Whether to strip punctuation/symbols from messages. (default false)
 HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false
 ```
 
+#### Response delay (per word)
+
+Simulate time to type a word, as a baseline, in milliseconds. (default 600)
+
+```
+HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD=N
+```
+
 ### Commands
 
 #### Impersonate
