@@ -82,15 +82,12 @@ function start(robot) {
                 var user = users[0];
                 if (user.name !== robot.name) {
                     impersonating = user.id;
-                    msg.send('impersonating ' + user.name);
+                    msg.send("I'm now impersonating " + user.name);
                 } else {
-                    msg.send('Can you impersonate yourself? I can\'t.');
+                    msg.send("Can you impersonate yourself? I can't.");
                 }
-
-                var markov = retrieve(impersonating);
-                msg.send(markov.respond(lastMessageText || 'beans'));
             } else {
-                msg.send("I don't know any " + username + ".");
+                msg.send("I don't know anyone by the name of " + username + ".");
             }
         }
     });
@@ -101,12 +98,12 @@ function start(robot) {
             impersonating = false;
 
             if (user) {
-                msg.send('stopped impersonating ' + user.name);
+                msg.send("I've stopped impersonating " + user.name);
             } else {
-                msg.send('stopped');
+                msg.send("I don't recognize that user.");
             }
         } else {
-            msg.send('Wat.');
+            msg.send("I wasn't impersonating anyone to begin with.");
         }
     });
 
