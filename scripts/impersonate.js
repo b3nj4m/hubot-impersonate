@@ -120,7 +120,7 @@ function start(robot) {
             }
 
             // TODO: Add condition for addressing direct messages to Hubot versus ambient participation. (Non-random vs. Random)
-            if (shouldRespond() && (Math.floor(Math.random() * (31 - 1)) + 1 > Math.floor(Math.random() * (31 - 1)) + 1)) {
+            if (shouldRespond() && (Math.floor(Math.random() * (21 - 1)) + 1 > Math.floor(Math.random() * (31 - 1)) + 1)) {
                 markov = retrieve(impersonating);
                 var markovResponse = markov.respond(text);
                 var baseDelay = RESPONSE_DELAY_PER_WORD * markovResponse.split(" ").length;
