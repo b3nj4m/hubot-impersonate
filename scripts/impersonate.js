@@ -132,7 +132,6 @@ function start(robot) {
         }
     });
 
-    // TODO: Add impersonation identification
     robot.respond(/who are you impersonating/i, function(msg) {
         if (shouldRespond()) {
             var user = robot.brain.userForId(impersonating);
