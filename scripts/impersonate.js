@@ -99,7 +99,7 @@ function start(robot) {
             if (user) {
                 msg.send("Fine, I've stopped impersonating " + user.name + ".");
             } else {
-                msg.send("I don't recognize that user, but I've impersonating anyway.");
+                msg.send("I don't recognize that user, but I've stopped impersonating anyway.");
             }
         } else {
             msg.send("I wasn't impersonating anyone to begin with.");
