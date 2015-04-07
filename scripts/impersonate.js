@@ -30,7 +30,7 @@ var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_res
 var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 10000;
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
-var RESPONSE_DELAY_PER_WORD =  process.env.HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD ? parseInt(process.env.HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD) : 600;
+var RESPONSE_DELAY_PER_WORD = process.env.HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD ? parseInt(process.env.HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD) : 600;
 
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
@@ -80,13 +80,8 @@ function start(robot) {
 
       if (users && users.length > 0) {
         var user = users[0];
-        if (user.name !== robot.name) {
-          impersonating = user.id;
-          msg.send('impersonating ' + user.name);
-        }
-        else {
-          msg.send('I cannot impersonate myself.');
-        }
+        impersonating = user.id;
+        msg.send('impersonating ' + user.name);
 
         // var markov = retrieve(impersonating);
         // msg.send(markov.respond(lastMessageText || 'beans'));
