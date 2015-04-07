@@ -59,7 +59,7 @@ HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false
 
 #### Response delay (per word)
 
-Simulate time to type a word, as a baseline, in milliseconds. (default 600)
+Simulate time to type a word, as a baseline, in milliseconds. A naive variance is applied to this number so as to produce irregularities in perceived response speed. (default 600)
 
 ```
 HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD=N
