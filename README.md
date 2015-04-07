@@ -83,3 +83,11 @@ Stop impersonating.
 hubot stop impersonating
 ```
 
+#### Identify impersonated party
+
+Find out who's being impersonated.
+
+```
+hubot who are you impersonating
+```
+
