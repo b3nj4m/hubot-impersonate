@@ -108,29 +108,28 @@ function start(robot) {
     });
 
     robot.hear(/.*/, function(msg) {
-            var text = msg.message.text;
-            var markov;
+        var text = msg.message.text;
+        var markov;
 
-            if (text && !hubotMessageRegex.test(text)) {
-                lastMessageText = text;
+        if (text && !hubotMessageRegex.test(text)) {
+            lastMessageText = text;
 
-                if (shouldTrain()) {
-                    var userId = msg.message.user.id;
-                    markov = retrieve(userId);
+            if (shouldTrain()) {
+                var userId = msg.message.user.id;
+                markov = retrieve(userId);
 
-                    markov.train(text);
-                    store(userId, markov);
-                }
+                markov.train(text);
+                store(userId, markov);
+            }
 
-                if (shouldRespond() && (Math.floor(Math.random() * (11 - 1)) + 1 > Math.floor(Math.random() * (11 - 1)) + 1)) {
-                    markov = retrieve(impersonating);
-                    var markovResponse = markov.respond(text);
-                    var baseDelay = RESPONSE_DELAY_PER_WORD * markovResponse.split(" ").length;
-                    var totalDelay = Math.random() * (baseDelay * 1.5 - baseDelay * 0.75) + baseDelay * 0.75;
-                    setTimeout(function() {
-                        msg.send(markovResponse);
-                    }, totalDelay);
-                }
+            if (shouldRespond() && (Math.floor(Math.random() * (11 - 1)) + 1 > Math.floor(Math.random() * (11 - 1)) + 1)) {
+                markov = retrieve(impersonating);
+                var markovResponse = markov.respond(text);
+                var baseDelay = RESPONSE_DELAY_PER_WORD * markovResponse.split(" ").length;
+                var totalDelay = Math.random() * (baseDelay * 1.5 - baseDelay * 0.75) + baseDelay * 0.75;
+                setTimeout(function() {
+                    msg.send(markovResponse);
+                }, totalDelay);
             }
         }
     });
