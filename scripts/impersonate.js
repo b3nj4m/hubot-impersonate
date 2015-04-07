@@ -16,6 +16,7 @@
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
+//  hubot who are you impersonating - find out which <user> is being impersonated.
 //  hubot stop impersonating - stop impersonating a user
 //
 //Author:
@@ -128,6 +129,20 @@ function start(robot) {
                     msg.send(markovResponse);
                 }, totalDelay);
             }
+        }
+    });
+
+    // TODO: Add impersonation identification
+    robot.respond(/who are you impersonating/i, function(msg) {
+        if (shouldRespond()) {
+            var user = robot.brain.userForId(impersonating);
+            if (user) {
+                msg.send("I'm currently impersonating " + user.name + ".");
+            } else {
+                msg.send("Nobody.");
+            }
+        } else {
+            msg.send("Nobody.");
         }
     });
 }
