@@ -5,7 +5,7 @@ Enable Hubot to learn from chat history and impersonate users. Hubot attempts to
 ```
 Bob: pizza is super good
 Alice: hubot impersonate bob
-Hubot: Alright. I'm now impersonating Bob.
+Hubot: Alright, I'll impersonate Bob.
 Eve: I love pizza
 Hubot: pizza is super
 ...
