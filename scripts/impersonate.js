@@ -84,7 +84,7 @@ function start(robot) {
                     impersonating = user.id;
                     msg.send("Alright. I'm now impersonating " + user.name + ".");
                 } else {
-                    msg.send("Can you impersonate yourself? I can't.");
+                    msg.send("Impersonating yourself? How meta.");
                 }
             } else {
                 msg.send("I don't know anyone by the name of " + username + ".");
