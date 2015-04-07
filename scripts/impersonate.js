@@ -57,7 +57,6 @@ function robotRetrieve(robot, cache, userId) {
 
 function start(robot) {
     var impersonating = false;
-    var lastMessageText;
 
     function shouldRespond() {
         return shouldRespondMode() && impersonating;
@@ -98,9 +97,9 @@ function start(robot) {
             impersonating = false;
 
             if (user) {
-                msg.send("I've stopped impersonating " + user.name + ".");
+                msg.send("Fine, I've stopped impersonating " + user.name + ".");
             } else {
-                msg.send("I don't recognize that user.");
+                msg.send("I don't recognize that user, but I've impersonating anyway.");
             }
         } else {
             msg.send("I wasn't impersonating anyone to begin with.");
@@ -112,17 +111,15 @@ function start(robot) {
         var markov;
 
         if (text && !hubotMessageRegex.test(text)) {
-            lastMessageText = text;
-
             if (shouldTrain()) {
                 var userId = msg.message.user.id;
                 markov = retrieve(userId);
-
                 markov.train(text);
                 store(userId, markov);
             }
 
-            if (shouldRespond() && (Math.floor(Math.random() * (21 - 1)) + 1 > Math.floor(Math.random() * (21 - 1)) + 1)) {
+            // TODO: Add condition for addressing direct messages to Hubot versus ambient participation. (Non-random vs. Random)
+            if (shouldRespond() && (Math.floor(Math.random() * (31 - 1)) + 1 > Math.floor(Math.random() * (31 - 1)) + 1)) {
                 markov = retrieve(impersonating);
                 var markovResponse = markov.respond(text);
                 var baseDelay = RESPONSE_DELAY_PER_WORD * markovResponse.split(" ").length;
