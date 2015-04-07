@@ -65,6 +65,14 @@ Simulate time to type a word, as a baseline, in milliseconds. (default 600)
 HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD=N
 ```
 
+#### Frequency threshold
+
+On a scale of 0-100, what number has to be exceeded by the randomizer in order to return a response. (default 50)
+
+```
+HUBOT_IMPERSONATE_FREQUENCY_THRESHOLD=N
+```
+
 ### Commands
 
 #### Impersonate

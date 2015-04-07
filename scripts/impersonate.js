@@ -13,10 +13,11 @@
 //  HUBOT_IMPERSONATE_CASE_SENSITIVE=true|false - whether to keep the original case of words (default false)
 //  HUBOT_IMPERSONATE_STRIP_PUNCTUATION=true|false - whether to strip punctuation/symbols from messages (default false)
 //  HUBOT_IMPERSONATE_RESPONSE_DELAY_PER_WORD=N - simulate time to type a word, as a baseline, in milliseconds. (default 600)
+//  HUBOT_IMPERSONATE_FREQUENCY_THRESHOLD=N - on a scale of 0-100, what randomized number has to be exceeded. (default 50)
 //
 //Commands:
 //  hubot impersonate <user> - impersonate <user> until told otherwise.
-//  hubot who are you impersonating - find out which <user> is being impersonated.
+//  hubot who are you impersonating - find out which user is being impersonated.
 //  hubot stop impersonating - stop impersonating a user
 //
 //Author:
@@ -32,6 +33,7 @@ var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
 var RESPONSE_DELAY_PER_WORD = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 600; // in milliseconds
+var FREQUENCY_THRESHOLD = process.env.HUBOT_IMPERSONATE_FREQUENCY_THRESHOLD ? parseInt(process.env.HUBOT_IMPERSONATE_FREQUENCY_THRESHOLD) : 50;
 
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
@@ -82,7 +84,7 @@ function start(robot) {
                 var user = users[0];
                 if (user.name !== robot.name) {
                     impersonating = user.id;
-                    msg.send("Alright. I'm now impersonating " + user.name + ".");
+                    msg.send("Alright, I'll impersonate " + user.name + ".");
                 } else {
                     msg.send("Impersonating yourself? How meta.");
                 }
@@ -98,7 +100,7 @@ function start(robot) {
             impersonating = false;
 
             if (user) {
-                msg.send("Fine, I've stopped impersonating " + user.name + ".");
+                msg.send("Fine, I'll shut up now.");
             } else {
                 msg.send("I don't recognize that user, but I've stopped impersonating anyway.");
             }
@@ -121,7 +123,7 @@ function start(robot) {
 
             // TODO: Add condition for addressing direct messages to Hubot versus ambient participation.
             // TODO: Make this a configurable setting at some point and simplify implementation
-            if (shouldRespond() && (Math.floor(Math.random() * (21 - 1)) + 1 > Math.floor(Math.random() * (41 - 1)) + 1)) {
+            if (shouldRespond() && (_.random(0, 100) > FREQUENCY_THRESHOLD)) {
                 markov = retrieve(impersonating);
                 var markovResponse = markov.respond(text);
                 var baseDelay = RESPONSE_DELAY_PER_WORD * markovResponse.split(" ").length;
