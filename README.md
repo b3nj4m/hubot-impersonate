@@ -1,6 +1,6 @@
 ### hubot-impersonate
 
-Enable Hubot to learn from chat history and impersonate users.
+Enable Hubot to learn from chat history and impersonate users. Hubot attempts to act more natural in its responses by adding delay variance and response frequency to prevent channel spamming and act as a good (if slightly deranged) citizen.
 
 ```
 Bob: pizza is super good
