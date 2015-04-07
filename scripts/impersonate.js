@@ -29,9 +29,7 @@ var MODE = process.env.HUBOT_IMPERSONATE_MODE && _.contains(['train', 'train_res
 var INIT_TIMEOUT = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 10000;
 var CASE_SENSITIVE = (!process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE || process.env.HUBOT_IMPERSONATE_CASE_SENSITIVE === 'false') ? false : true;
 var STRIP_PUNCTUATION = (!process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION || process.env.HUBOT_IMPERSONATE_STRIP_PUNCTUATION === 'false') ? false : true;
-
-// TEST CONSTS
-var RESPONSE_DELAY_PER_WORD = 600; // 600ms per word on average, inclusive of thought processes
+var RESPONSE_DELAY_PER_WORD = process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT ? parseInt(process.env.HUBOT_IMPERSONATE_INIT_TIMEOUT) : 600; // in milliseconds
 
 var shouldTrain = _.constant(_.contains(['train', 'train_respond'], MODE));
 
@@ -81,8 +79,12 @@ function start(robot) {
 
             if (users && users.length > 0) {
                 var user = users[0];
-                impersonating = user.id;
-                msg.send('impersonating ' + user.name);
+                if (user.name !== robot.name) {
+                    impersonating = user.id;
+                    msg.send('impersonating ' + user.name);
+                } else {
+                    msg.send('Can you impersonate yourself? I can\'t.');
+                }
 
                 var markov = retrieve(impersonating);
                 msg.send(markov.respond(lastMessageText || 'beans'));
@@ -122,7 +124,7 @@ function start(robot) {
                 store(userId, markov);
             }
 
-            if (shouldRespond() && (Math.floor(Math.random() * (11 - 1)) + 1 > Math.floor(Math.random() * (11 - 1)) + 1)) {
+            if (shouldRespond() && (Math.floor(Math.random() * (21 - 1)) + 1 > Math.floor(Math.random() * (21 - 1)) + 1)) {
                 markov = retrieve(impersonating);
                 var markovResponse = markov.respond(text);
                 var baseDelay = RESPONSE_DELAY_PER_WORD * markovResponse.split(" ").length;
