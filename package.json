@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "markov-respond": "~7.0.0",
-    "underscore": "~1.7.0",
-    "msgpack": "~0.2.4"
+    "msgpack": "^1.0.2",
+    "underscore": "~1.7.0"
   }
 }
